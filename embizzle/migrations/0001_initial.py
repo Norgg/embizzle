@@ -27,6 +27,8 @@ class Migration(migrations.Migration):
                 ('children_death_rate', models.FloatField(default=0.002)),
                 ('breeder_death_rate', models.FloatField(default=0.005)),
                 ('other_death_rate', models.FloatField(default=0.1)),
+                ('nutrients', models.IntegerField(default=1000)),
+                ('nutrient_production', models.IntegerField(default=2)),
             ],
         ),
         migrations.CreateModel(

@@ -41,6 +41,8 @@ class Civilisation(Model):
     children_death_rate = FloatField(default=0.002)  # death rate per child
     breeder_death_rate = FloatField(default=0.005)  # death rate per breeder
     other_death_rate = FloatField(default=0.1)  # death rate per other
+    nutrients = IntegerField(default=1000)  # one consumed per person per tick
+    nutrient_production = IntegerField(default=2)  # nutrients produced per breeder and pre 2 others.
 
     def population(self):
         return self.children + self.breeders + self.others
@@ -67,6 +69,10 @@ class Civilisation(Model):
             self.children -= int(round(self.children * self.children_death_rate))
             self.breeders -= int(round(self.breeders * self.breeder_death_rate))
             self.others -= int(round(self.others * self.other_death_rate))
+
+            # Consume food
+            self.nutrients -= self.population()
+            self.nutrients += self.nutrient_production * (self.breeders + self.others / 2)
 
         if ticks:
             self.save()
