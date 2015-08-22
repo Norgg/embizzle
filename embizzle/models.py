@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from django.db.models import CharField, DateTimeField, FloatField, ForeignKey, IntegerField, Model, OneToOneField
 from django.utils import timezone
 
+OTHER_STARVATION_UNREST = 10
+BREEDER_STARVATION_UNREST = 50
+CHILD_STARVATION_UNREST = 100
+
 
 class Game(Model):
     started_at = DateTimeField(default=timezone.now)
@@ -38,9 +42,17 @@ class Civilisation(Model):
     breeders = IntegerField(default=100)  # People of breeding age / ability/ will
     others = IntegerField(default=20)  # Others
     birth_rate = FloatField(default=0.07)  # birth rate per breeder
+
+    # Death rates
     children_death_rate = FloatField(default=0.002)  # death rate per child
     breeder_death_rate = FloatField(default=0.005)  # death rate per breeder
     other_death_rate = FloatField(default=0.1)  # death rate per other
+
+    # Starvation tracking
+    starved_children = IntegerField(default=0)
+    starved_breeders = IntegerField(default=0)
+    starved_others = IntegerField(default=0)
+
     nutrients = IntegerField(default=1000)  # one consumed per person per tick
     nutrient_production = IntegerField(default=2)  # nutrients produced per breeder and pre 2 others.
 
@@ -52,14 +64,16 @@ class Civilisation(Model):
             self.unrest += 1
 
             # Each cycle 1/20th of "children" become "breeders"
-            new_breeders = max(1, int(round(self.children / 20.0)))
-            self.breeders += new_breeders
-            self.children -= new_breeders
+            if self.children > 0:
+                new_breeders = max(1, int(round(self.children / 20.0)))
+                self.breeders += new_breeders
+                self.children -= new_breeders
 
             # Also 1/20th of "breeders" become "others"
-            new_others = max(1, int(round(self.breeders / 20.0)))
-            self.others += new_others
-            self.breeders -= new_others
+            if self.breeders > 0:
+                new_others = max(1, int(round(self.breeders / 20.0)))
+                self.others += new_others
+                self.breeders -= new_others
 
             # Produce new children based on birth rate
             if self.breeders > 2:
@@ -71,26 +85,41 @@ class Civilisation(Model):
             self.others -= int(round(self.others * self.other_death_rate))
 
             # Consume food/process starvation
+            self.starved_children = self.starved_breeders = self.starved_others = 0
+
             if self.nutrients >= self.population():
                 self.nutrients -= self.population()
             else:
                 starvation = self.population() - self.nutrients
+                # TODO: Make this into a cleaner loop.
                 if starvation > self.others:
                     self.others = 0
                     starvation -= self.others
+                    self.starved_others = self.others
+                    self.unrest += self.others * OTHER_STARVATION_UNREST
                     if starvation > self.breeders:
                         self.breeders = 0
+                        self.starved_children = self.breeders
                         starvation -= self.breeders
+                        self.unrest += self.breeders * BREEDER_STARVATION_UNREST
                         if starvation > self.children:
                             # uh oh
                             self.children = 0
+                            self.starved_children = self.children
                             starvation -= self.children
+                            self.unrest += self.children * CHILD_STARVATION_UNREST
                         else:
+                            self.starved_children = starvation
                             self.children -= starvation
+                            self.unrest += starvation * CHILD_STARVATION_UNREST
                     else:
+                        self.starved_breeders = starvation
                         self.breeders -= starvation
+                        self.unrest += starvation * BREEDER_STARVATION_UNREST
                 else:
+                    self.starved_others = starvation
                     self.others -= starvation
+                    self.unrest += starvation * OTHER_STARVATION_UNREST
 
                 self.nutrients = 0
             self.nutrients += self.nutrient_production * (self.breeders + self.others / 2)
