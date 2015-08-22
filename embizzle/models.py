@@ -9,14 +9,14 @@ class Game(Model):
     started_at = DateTimeField(default=timezone.now)
     last_tick = DateTimeField(default=timezone.now)
     ticks = IntegerField(default=0)  # Each tick is one "cycle".
-    tick_length = IntegerField(default=5)  # Length of each tick in seconds.
+    tick_length = IntegerField(default=1)  # Length of each tick in seconds.
 
     def time_until_next_tick(self):
         return (self.last_tick + timedelta(seconds=self.tick_length)) - timezone.now()
 
     def check_tick(self):
         ticks_to_process = 0
-        while self.time_until_next_tick() < timedelta():
+        while self.time_until_next_tick() < timedelta(seconds=0):
             ticks_to_process += 1
             self.ticks += 1
             self.last_tick += timedelta(seconds=self.tick_length)
@@ -37,10 +37,10 @@ class Civilisation(Model):
     children = IntegerField(default=0)  # Number of children in the population
     breeders = IntegerField(default=100)  # People of breeding age / ability/ will
     others = IntegerField(default=20)  # Others
-    birth_rate = FloatField(default=0.04)  # birth rate per breeder
-    children_death_rate = FloatField(default=0.005)  # death rate per child
-    breeder_death_rate = FloatField(default=0.01)  # death rate per breeder
-    other_death_rate = FloatField(default=0.05)  # death rate per other
+    birth_rate = FloatField(default=0.07)  # birth rate per breeder
+    children_death_rate = FloatField(default=0.002)  # death rate per child
+    breeder_death_rate = FloatField(default=0.005)  # death rate per breeder
+    other_death_rate = FloatField(default=0.1)  # death rate per other
 
     def population(self):
         return self.children + self.breeders + self.others

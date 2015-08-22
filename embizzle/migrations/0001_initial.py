@@ -23,10 +23,10 @@ class Migration(migrations.Migration):
                 ('children', models.IntegerField(default=0)),
                 ('breeders', models.IntegerField(default=100)),
                 ('others', models.IntegerField(default=20)),
-                ('birth_rate', models.FloatField(default=0.04)),
-                ('children_death_rate', models.FloatField(default=0.005)),
-                ('breeder_death_rate', models.FloatField(default=0.01)),
-                ('other_death_rate', models.FloatField(default=0.05)),
+                ('birth_rate', models.FloatField(default=0.07)),
+                ('children_death_rate', models.FloatField(default=0.002)),
+                ('breeder_death_rate', models.FloatField(default=0.005)),
+                ('other_death_rate', models.FloatField(default=0.1)),
             ],
         ),
         migrations.CreateModel(
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('started_at', models.DateTimeField(default=django.utils.timezone.now)),
                 ('last_tick', models.DateTimeField(default=django.utils.timezone.now)),
                 ('ticks', models.IntegerField(default=0)),
-                ('tick_length', models.IntegerField(default=5)),
+                ('tick_length', models.IntegerField(default=1)),
             ],
         ),
         migrations.CreateModel(

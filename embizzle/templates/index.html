@@ -3,7 +3,7 @@
 {% block "content" %}
     <h3>Game</h3>
     Started: {{game.started_at}}<br/>
-    Next cycle: {{game.time_until_next_tick.seconds}}s<br/>
+    Next cycle: {{game.time_until_next_tick.total_seconds}}s<br/>
     Breeding Cycle: {{game.ticks}}<br/>
     <h3>Leader</h3>
     Name: {{ leader.name }}<br/>
