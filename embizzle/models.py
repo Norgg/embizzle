@@ -1,10 +1,30 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.db.models import CharField, DateTimeField, FloatField, ForeignKey, IntegerField, Model, OneToOneField
 from django.utils import timezone
 
 
 class Game(Model):
+    started_at = DateTimeField(default=timezone.now)
     last_tick = DateTimeField(default=timezone.now)
+    ticks = IntegerField(default=0)
+    tick_length = IntegerField(default=20)  # Length of each tick in seconds.
+
+    def time_until_next_tick(self):
+        return (self.last_tick + timedelta(seconds=self.tick_length)) - timezone.now()
+
+    def check_tick(self):
+        while self.time_until_next_tick() < timedelta():
+            self.tick()
+
+    def tick(self):
+        self.ticks += 1
+        self.last_tick += timedelta(seconds=self.tick_length)
+        self.save()
+        for leader in self.leaders.all():
+            leader.process_tick()
+            leader.civ.process_tick()
 
 
 class Civilisation(Model):
@@ -22,7 +42,8 @@ class Civilisation(Model):
 
 
 class Leader(Model):
-    game = ForeignKey(Game)
-    user = ForeignKey(User)
-    civ = OneToOneField(Civilisation)
+    game = ForeignKey(Game, related_name="leaders")
+    name = CharField(max_length=1024)
+    user = ForeignKey(User, related_name="leaders")
+    civ = OneToOneField(Civilisation, related_name="leader")
     funds = IntegerField()
