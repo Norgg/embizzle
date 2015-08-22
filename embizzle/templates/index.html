@@ -56,6 +56,7 @@
                 <tr><td>Total</td><td>{{ civ.population }}</td></tr>
             </table>
 
+            <h3>Unrest</h3>
             <div class="progress">
                 <div class="progress-bar" role="progressbar" 
                     aria-valuenow="{{ civ.unrest }}" aria-valuemin="0" aria-valuemax="{{ civ.max_unrest }}" 
@@ -64,6 +65,7 @@
               </div>
             </div>
 
+            <h3>Resources</h3>
             {{ civ.nutrients }} nutrients remaining<br/>
             Tax Rate: {{ civ.tax_rate }}<br/>
         </div>
