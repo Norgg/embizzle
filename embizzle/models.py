@@ -37,7 +37,10 @@ class Game(Model):
 class Civilisation(Model):
     name = CharField(max_length=1024, default="Nowhere")
     funds = FloatField(default=1000.0)
+
     unrest = IntegerField(default=0)  # How unhappy the population are with their leader
+    max_unrest = IntegerField(default=200)  # How unhappy the population can get before deposing the leader
+
     children = IntegerField(default=0)  # Number of children in the population
     breeders = IntegerField(default=100)  # People of breeding age / ability/ will
     others = IntegerField(default=20)  # Others
@@ -53,7 +56,7 @@ class Civilisation(Model):
     starved_breeders = IntegerField(default=0)
     starved_others = IntegerField(default=0)
 
-    tax_rate = FloatField(default=0.05)
+    tax_rate = FloatField(default=0.1)
 
     nutrients = IntegerField(default=1000)  # one consumed per person per tick
     nutrient_production = IntegerField(default=2)  # nutrients produced per breeder and pre 2 others.
@@ -139,6 +142,9 @@ class Civilisation(Model):
             # Process funds
             economy_mult = 1.0 + self.economy_level / 1000.0
             self.funds += (self.breeders * self.tax_rate + self.others / 2 * self.tax_rate) * economy_mult
+
+            if self.unrest > self.max_unrest:
+                self.unrest = self.max_unrest
 
         if ticks:
             self.save()
