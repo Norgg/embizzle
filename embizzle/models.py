@@ -13,7 +13,7 @@ class Game(Model):
     started_at = DateTimeField(default=timezone.now)
     last_tick = DateTimeField(default=timezone.now)
     ticks = IntegerField(default=0)  # Each tick is one "cycle".
-    tick_length = IntegerField(default=1)  # Length of each tick in seconds.
+    tick_length = IntegerField(default=60)  # Length of each tick in seconds.
 
     def time_until_next_tick(self):
         return (self.last_tick + timedelta(seconds=self.tick_length)) - timezone.now()
