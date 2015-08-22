@@ -70,8 +70,29 @@ class Civilisation(Model):
             self.breeders -= int(round(self.breeders * self.breeder_death_rate))
             self.others -= int(round(self.others * self.other_death_rate))
 
-            # Consume food
-            self.nutrients -= self.population()
+            # Consume food/process starvation
+            if self.nutrients >= self.population():
+                self.nutrients -= self.population()
+            else:
+                starvation = self.population() - self.nutrients
+                if starvation > self.others:
+                    self.others = 0
+                    starvation -= self.others
+                    if starvation > self.breeders:
+                        self.breeders = 0
+                        starvation -= self.breeders
+                        if starvation > self.children:
+                            # uh oh
+                            self.children = 0
+                            starvation -= self.children
+                        else:
+                            self.children -= starvation
+                    else:
+                        self.breeders -= starvation
+                else:
+                    self.others -= starvation
+
+                self.nutrients = 0
             self.nutrients += self.nutrient_production * (self.breeders + self.others / 2)
 
         if ticks:
