@@ -3,13 +3,18 @@
 {% block "content" %}
     <h3>Game</h3>
     Started: {{game.started_at}}<br/>
-    Next tick: {{game.time_until_next_tick.seconds}}s<br/>
-    Ticks: {{game.ticks}}<br/>
+    Next cycle: {{game.time_until_next_tick.seconds}}s<br/>
+    Breeding Cycle: {{game.ticks}}<br/>
     <h3>Leader</h3>
     Name: {{ leader.name }}<br/>
     Personal funds: {{ leader.funds }}
     <h3>Civ</h3>
     Name: {{ civ.name }}<br/>
+    Children: {{ civ.children }}<br/>
+    Breeders: {{ civ.breeders }}<br/>
+    Others: {{ civ.others }}<br/>
     Population: {{ civ.population }}<br/>
     Funds: {{ civ.funds }}<br/>
+
+    <a href="/reset">reset</a>
 {% endblock %}
