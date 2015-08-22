@@ -1,16 +1,23 @@
 {% extends "base.html" %}
 
 {% block "content" %}
-    <h3>Game</h3>
+    <a href="/accounts/logout?next=/">Log out</a>
+
+    <h2>Biggest Palaces</h2>
+    {% for top_leader in top_leaders %}
+    {{top_leader.name}}<br/>
+    {% endfor %}
+
+    <h2>Game</h2>
     Started: {{game.started_at}}<br/>
     Next cycle: {{game.time_until_next_tick.total_seconds|floatformat:0}}s<br/>
     Breeding Cycle: {{game.ticks}}<br/>
-    <h3>Leader</h3>
+    <h2>Leader</h2>
     Name: {{ leader.name }}<br/>
     Palace size: {{ leader.palace_size }}<br/>
-    Personal funds: {{ leader.funds }} crods<br/>
+    Personal funds: {{ leader.funds|floatformat:2 }} crods<br/>
     <a href="/action/construct">expand palace</a><br/>
-    <h3>Civ</h3>
+    <h2>The Settlement</h2>
     Name: {{ civ.name }}<br/>
     Children: {{ civ.children }}<br/>
     Breeders: {{ civ.breeders }}<br/>
@@ -18,9 +25,16 @@
     Population: {{ civ.population }}<br/>
     Unrest: {{ civ.unrest }}<br/>
     Nutrients: {{ civ.nutrients }}<br/>
-    Funds: {{ civ.funds }} crods<br/>
+    Tax Rate: {{ civ.tax_rate }}<br/>
+    Funds: {{ civ.funds|floatformat:2 }} crods<br/>
 
-    <a href="/action/embezzle">embezzle 100</a>
-
-    <a href="/reset">reset</a>
+    <h2>Actions</h2>
+    <a href="/action/raise_taxes">raise_taxes</a><br/>
+    <h3>Spend 100 crods on:</h3>
+    <a href="/action/embezzle">embezzlement</a><br/>
+    <a href="/action/import_nutrients">importing nutrients</a><br/>
+    <a href="/action/invest_economy">invest in the economy</a><br/>
+    <a href="/action/invest_healthcare">invest in healthcare</a><br/>
+    <a href="/action/invest_education">invest in education</a><br/>
+    <a href="/action/invest_agriculture">invest in agriculture</a><br/>
 {% endblock %}

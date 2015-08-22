@@ -14,13 +14,14 @@ from models import Civilisation, Game, Leader
 
 
 @login_required
+@transaction.atomic
 def index(request):
     user = request.user
     leader = user.leaders.all()[0]
     civ = leader.civ
     game = leader.game
     game.check_tick()
-    # game.process_ticks(1000)
+    top_leaders = Leader.objects.order_by('-palace_size')[0:10]
     return render(request, "index.html", locals())
 
 
@@ -30,12 +31,12 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             game, created = Game.objects.get_or_create(id=1)  # TODO: Handle game creation properly.
-            user = User.objects.create(username=form.cleaned_data['username'])
-            civ = Civilisation.objects.create(name=form.cleaned_data['civilisation_name'])
+            user = User.objects.create(username=form.cleaned_data['leader_name'])
+            civ = Civilisation.objects.create(name="The People of {}".format(form.cleaned_data['leader_name']))
             leader = Leader.objects.create(name=form.cleaned_data['leader_name'], user=user, civ=civ, game=game)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            user = authenticate(username=form.cleaned_data['username'],
+            user = authenticate(username=form.cleaned_data['leader_name'],
                                 password=form.cleaned_data['password'])
             login(request, user)
             print("User created.")

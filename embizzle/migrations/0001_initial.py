@@ -33,6 +33,10 @@ class Migration(migrations.Migration):
                 ('tax_rate', models.FloatField(default=0.05)),
                 ('nutrients', models.IntegerField(default=1000)),
                 ('nutrient_production', models.IntegerField(default=2)),
+                ('economy_level', models.IntegerField(default=0)),
+                ('healthcare_level', models.IntegerField(default=0)),
+                ('education_level', models.IntegerField(default=0)),
+                ('agriculture_level', models.IntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
@@ -42,7 +46,7 @@ class Migration(migrations.Migration):
                 ('started_at', models.DateTimeField(default=django.utils.timezone.now)),
                 ('last_tick', models.DateTimeField(default=django.utils.timezone.now)),
                 ('ticks', models.IntegerField(default=0)),
-                ('tick_length', models.IntegerField(default=1)),
+                ('tick_length', models.IntegerField(default=60)),
             ],
         ),
         migrations.CreateModel(

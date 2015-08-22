@@ -58,6 +58,12 @@ class Civilisation(Model):
     nutrients = IntegerField(default=1000)  # one consumed per person per tick
     nutrient_production = IntegerField(default=2)  # nutrients produced per breeder and pre 2 others.
 
+    # Upgrade levels
+    economy_level = IntegerField(default=0)
+    healthcare_level = IntegerField(default=0)
+    education_level = IntegerField(default=0)
+    agriculture_level = IntegerField(default=0)
+
     def population(self):
         return self.children + self.breeders + self.others
 
@@ -67,7 +73,8 @@ class Civilisation(Model):
 
             # Each cycle 1/20th of "children" become "breeders"
             if self.children > 0:
-                new_breeders = max(1, int(round(self.children / 20.0)))
+                education_mult = 1.0 + self.education_level / 200.0
+                new_breeders = max(1, int(round(self.children / 20.0) * education_mult))
                 self.breeders += new_breeders
                 self.children -= new_breeders
 
@@ -82,14 +89,16 @@ class Civilisation(Model):
                 self.children += max(1, int(round(self.breeders * self.birth_rate)))
 
             # Apply death rates
-            self.children -= int(round(self.children * self.children_death_rate))
-            self.breeders -= int(round(self.breeders * self.breeder_death_rate))
-            self.others -= int(round(self.others * self.other_death_rate))
+            healthcare_reduction = 1.0 - self.healthcare_level / 200.0
+            self.children -= int(round(self.children * self.children_death_rate * healthcare_reduction))
+            self.breeders -= int(round(self.breeders * self.breeder_death_rate * healthcare_reduction))
+            self.others -= int(round(self.others * self.other_death_rate * healthcare_reduction))
 
             # Consume food/process starvation
             self.starved_children = self.starved_breeders = self.starved_others = 0
 
-            self.nutrients += self.nutrient_production * (self.breeders + self.others / 2)
+            agriculture_mult = 1.0 + self.agriculture_level / 200.0
+            self.nutrients += self.nutrient_production * (self.breeders + self.others / 2) * agriculture_mult
 
             if self.nutrients >= self.population():
                 self.nutrients -= self.population()
@@ -128,7 +137,8 @@ class Civilisation(Model):
                 self.nutrients = 0
 
             # Process funds
-            self.funds += self.breeders * self.tax_rate + self.others / 2 * self.tax_rate
+            economy_mult = 1.0 + self.economy_level / 1000.0
+            self.funds += (self.breeders * self.tax_rate + self.others / 2 * self.tax_rate) * economy_mult
 
         if ticks:
             self.save()
