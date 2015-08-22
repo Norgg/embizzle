@@ -1,14 +1,18 @@
 <!doctype html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css"/>
         <link rel="stylesheet" href="/static/base.css"/>
         <script src="/static/js/jquery.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
+        <title>Embizzle - A game by Norgg for LD 33</title>
     </head>
     <body>
-        {% block "content" %}
-        {% endblock %}
+        <div class="container-fluid">
+            {% block "content" %}
+            {% endblock %}
+        </div>
     </body>
 </html>

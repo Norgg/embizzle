@@ -3,6 +3,14 @@ body {
     color: white;
 }
 
+input {
+    color: black;
+}
+
+.well {
+    color: #444;
+}
+
 .action {
     width: 20em;
 }
