@@ -36,7 +36,7 @@ class Game(Model):
 
 class Civilisation(Model):
     name = CharField(max_length=1024, default="Nowhere")
-    funds = IntegerField(default=1000)
+    funds = FloatField(default=1000.0)
     unrest = IntegerField(default=0)  # How unhappy the population are with their leader
     children = IntegerField(default=0)  # Number of children in the population
     breeders = IntegerField(default=100)  # People of breeding age / ability/ will
@@ -52,6 +52,8 @@ class Civilisation(Model):
     starved_children = IntegerField(default=0)
     starved_breeders = IntegerField(default=0)
     starved_others = IntegerField(default=0)
+
+    tax_rate = FloatField(default=0.05)
 
     nutrients = IntegerField(default=1000)  # one consumed per person per tick
     nutrient_production = IntegerField(default=2)  # nutrients produced per breeder and pre 2 others.
@@ -86,6 +88,8 @@ class Civilisation(Model):
 
             # Consume food/process starvation
             self.starved_children = self.starved_breeders = self.starved_others = 0
+
+            self.nutrients += self.nutrient_production * (self.breeders + self.others / 2)
 
             if self.nutrients >= self.population():
                 self.nutrients -= self.population()
@@ -122,7 +126,9 @@ class Civilisation(Model):
                     self.unrest += starvation * OTHER_STARVATION_UNREST
 
                 self.nutrients = 0
-            self.nutrients += self.nutrient_production * (self.breeders + self.others / 2)
+
+            # Process funds
+            self.funds += self.breeders * self.tax_rate + self.others / 2 * self.tax_rate
 
         if ticks:
             self.save()
@@ -133,7 +139,8 @@ class Leader(Model):
     name = CharField(max_length=1024, default="Someone")
     user = ForeignKey(User, related_name="leaders")
     civ = OneToOneField(Civilisation, related_name="leader")
-    funds = IntegerField(default=100)
+    funds = FloatField(default=100.0)
+    palace_size = IntegerField(default=1)  # How big this leader's "palace" is.
 
     def process_ticks(self, ticks):
         self.civ.process_ticks(ticks)

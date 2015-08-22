@@ -19,7 +19,10 @@ from django.contrib import admin
 import views
 
 urlpatterns = [
+    url(r'^register', views.register),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index),
+    url(r'^action/(\w+)$', views.action),
     url(r'^reset$', views.reset),
+    url(r'^$', views.index),
 ]
