@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
 {% block "content" %}
-Hello
+    <h3>Leader</h3>
+    {{ leader.user.username }}<br/>
+    {{ leader.funds }}
+    <h3>Civ</h3>
+    {{ civ.name }}<br/>
+    {{ civ.population }}<br/>
+    {{ civ.funds }}<br/>
 {% endblock %}
