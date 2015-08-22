@@ -26,7 +26,8 @@
     </div>
 
     <div id="settlement">
-        <h2>{{civ.name}}</h2>
+        <h2>{{ civ.name }}</h2>
+        <h3>Public funds: {{ civ.funds|floatformat:2 }} crods</h3>
         <h3>Population</h3>
         <table>
             <tr><td>Children</td><td>{{ civ.children }}</td></tr>
@@ -35,23 +36,28 @@
             <tr><td>Total</td><td>{{ civ.population }}</td></tr>
         </table>
 
-        Unrest: <pre>{{ unrest_str }}</pre><br/>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" 
+                aria-valuenow="{{civ.unrest}}" aria-valuemin="0" aria-valuemax="{{civ.max_unrest}}" 
+                style="width: {{unrest_percent}}%;">
+          </div>
+        </div>
+
         {{ civ.nutrients }} nutrients remaining<br/>
         Tax Rate: {{ civ.tax_rate }}<br/>
-        Funds: {{ civ.funds|floatformat:2 }} crods<br/>
     </div>
     
     {% if civ.unrest < civ.max_unrest %}
         <div id="actions">
             <h2>Actions</h2>
-            <a class="action" href="/action/construct">expand palace</a><br/>
-            <a class="action" href="/action/raise_taxes">raise_taxes</a>
-            <a class="action" href="/action/embezzle">embezzle 100 crods</a>
-            <a class="action" href="/action/import_nutrients">importing 100 crods of nutrients</a>
-            <a class="action" href="/action/invest_economy">invest 100 crods in the economy</a>
-            <a class="action" href="/action/invest_healthcare">invest 100 crods in healthcare</a>
-            <a class="action" href="/action/invest_education">invest 100 crods in education</a>
-            <a class="action" href="/action/invest_agriculture">invest 100 crods in agriculture</a>
+            <a class="action btn btn-primary" href="/action/construct">expand palace</a><br/>
+            <a class="action btn btn-primary" href="/action/raise_taxes">raise_taxes</a><br/>
+            <a class="action btn btn-primary" href="/action/embezzle">embezzle 100 crods</a><br/>
+            <a class="action btn btn-primary" href="/action/import_nutrients">importing 100 crods of nutrients</a><br/>
+            <a class="action btn btn-primary" href="/action/invest_economy">invest 100 crods in the economy</a><br/>
+            <a class="action btn btn-primary" href="/action/invest_healthcare">invest 100 crods in healthcare</a><br/>
+            <a class="action btn btn-primary" href="/action/invest_education">invest 100 crods in education</a><br/>
+            <a class="action btn btn-primary" href="/action/invest_agriculture">invest 100 crods in agriculture</a><br/>
         </div>
     {% endif %}
 {% endblock %}

@@ -22,7 +22,7 @@ def index(request):
     game = leader.game
     game.check_tick()
     top_leaders = Leader.objects.order_by('-palace_size')[0:10]
-    unrest_str = '[' + ('#'*(civ.unrest/2)) + (' '*((civ.max_unrest-civ.unrest)/2)) + ']'
+    unrest_percent = int(civ.unrest * 100 / civ.max_unrest)
     return render(request, "index.html", locals())
 
 

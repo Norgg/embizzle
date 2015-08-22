@@ -2,3 +2,7 @@ body {
     background-color: black;
     color: white;
 }
+
+.action {
+    width: 20em;
+}
