@@ -46,12 +46,12 @@ class Civilisation(Model):
     children = IntegerField(default=0)  # Number of children in the population
     breeders = IntegerField(default=100)  # People of breeding age / ability/ will
     others = IntegerField(default=20)  # Others
-    birth_rate = FloatField(default=0.2)  # birth rate per breeder
+    birth_rate = FloatField(default=0.25)  # birth rate per breeder
 
     # Death rates
-    children_death_rate = FloatField(default=0.03)  # death rate per child
-    breeder_death_rate = FloatField(default=0.06)  # death rate per breeder
-    other_death_rate = FloatField(default=0.1)  # death rate per other
+    children_death_rate = FloatField(default=0.04)  # death rate per child
+    breeder_death_rate = FloatField(default=0.08)  # death rate per breeder
+    other_death_rate = FloatField(default=0.15)  # death rate per other
 
     # Starvation tracking
     starved_children = IntegerField(default=0)
@@ -60,17 +60,18 @@ class Civilisation(Model):
 
     recent_births = IntegerField(default=0)
     recent_deaths = IntegerField(default=0)
+    total_deaths = IntegerField(default=0)
 
     tax_rate = FloatField(default=0.3)
 
-    nutrients = IntegerField(default=1000)  # one consumed per person per tick
-    nutrient_production = IntegerField(default=10)  # nutrients produced per (15+agriculture level)
+    nutrients = IntegerField(default=500)  # one consumed per person per tick
+    nutrient_production = IntegerField(default=10)  # nutrients produced per agriculture level
     nutrient_storage = IntegerField(default=2000)
 
     # Upgrade levels
     economy_level = IntegerField(default=0)
     healthcare_level = IntegerField(default=0)
-    agriculture_level = IntegerField(default=0)
+    agriculture_level = IntegerField(default=17)
 
     def population(self):
         return self.children + self.breeders + self.others
@@ -85,7 +86,7 @@ class Civilisation(Model):
 
             # Each cycle 1/20th of "children" become "breeders"
             if self.children > 0:
-                new_breeders = max(1, int(round(self.children / 20.0)))
+                new_breeders = max(1, int(round(self.children / 15.0)))
                 self.breeders += new_breeders
                 self.children -= new_breeders
 
@@ -114,7 +115,7 @@ class Civilisation(Model):
             # Consume food/process starvation
             self.starved_children = self.starved_breeders = self.starved_others = 0
 
-            agriculture_mult = 15.0 + self.agriculture_level
+            agriculture_mult = self.agriculture_level
             self.nutrients += self.nutrient_production * agriculture_mult
 
             if self.nutrients >= self.population():
@@ -154,6 +155,7 @@ class Civilisation(Model):
                 self.nutrients = 0
 
             self.recent_deaths += self.starved_children + self.starved_breeders + self.starved_others
+            self.total_deaths += self.recent_deaths
 
             if self.nutrients > self.nutrient_storage:
                 self.nutrients = self.nutrient_storage
