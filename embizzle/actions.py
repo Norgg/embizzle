@@ -22,7 +22,7 @@ def raise_taxes(user, game, civ, leader):
 def construct(user, game, civ, leader):
     if leader.funds >= 100:
         leader.funds -= 100
-        leader.palace_size += 1
+        leader.palace_blocks += 1
         leader.save()
 
 

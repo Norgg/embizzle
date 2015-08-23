@@ -2,11 +2,11 @@
 
 {% block "content" %}
     <script src="static/index.js"></script>
-    <script>$(function(){countdown({{game.time_until_next_tick.total_seconds}})});</script>
+    <script>$(function(){countdown({{game.time_until_next_tick.total_seconds}}+1)});</script>
 
     <div class="row well">
         <div class="col-xs-4" id="login">
-            <h3>All Praise {{ user.username }} ( <a href="/accounts/logout?next=/">log out</a> )</h3>
+            <h3>All Praise {{ user.username }} (<a href="/accounts/logout?next=/">log out</a>)</h3>
         </div>
         <div class="col-xs-4" id="gameinfo">
             <h3>Breeding cycle {{game.ticks}}, next cycle in <span id="countdown">{{game.time_until_next_tick.total_seconds|floatformat:0}}</span>s</h3>
@@ -50,8 +50,22 @@
                     HAS BEEN DEPOSED!
                 {% endif %}
             </h2>
-            Palace size: {{ leader.palace_size }}<br/>
             Personal funds: {{ leader.funds|floatformat:2 }} crods<br/>
+            Palace blocks: {{ leader.palace_blocks }}<br/>
+            <h3>Palace</h3>
+            <div id="palace">
+                {% for row in palace_rows %}
+                    
+                    {% for blk in row %}
+                        {% if blk == " " %}
+                            <a href="/build/{{forloop.parentloop.counter}}/{{forloop.counter}}" class="palace-block btn btn-default"></a>
+                        {% else %}
+                            <a class="palace-block btn btn-default disabled"></a>
+                        {% endif %}
+                    {% endfor %}
+                    <br/>
+                {% endfor %}
+            </div>
         </div>
 
         <div class="col-xs-4" id="settlement">

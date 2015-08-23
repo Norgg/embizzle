@@ -8,7 +8,7 @@ from django.utils import timezone
 OTHER_STARVATION_UNREST = 10
 BREEDER_STARVATION_UNREST = 50
 CHILD_STARVATION_UNREST = 100
-BASE_EARNINGS = 3.0
+BASE_EARNINGS = 5.0
 
 
 class Game(Model):
@@ -164,7 +164,9 @@ class Leader(Model):
     civ = OneToOneField(Civilisation, related_name="leader")
     funds = FloatField(default=100.0)
     deposed = BooleanField(default=False)
-    palace_size = IntegerField(default=1)  # How big this leader's "palace" is.
+    palace_size = IntegerField(default=0)  # How big this leader's "palace" is.
+    palace_blocks = IntegerField(default=2)
+    palace = CharField(max_length=256, default=" "*256)
     created = DateTimeField(default=timezone.now)
 
     def process_ticks(self, ticks):

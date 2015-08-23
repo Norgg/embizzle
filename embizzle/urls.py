@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^action/(\w+)$', views.action),
+    url(r'^build/(\d+)/(\d+)$', views.build),
     url(r'^reset$', views.reset),
     url(r'^$', views.index),
 ]

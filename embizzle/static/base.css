@@ -14,3 +14,22 @@ input {
 .action {
     width: 20em;
 }
+
+#palace {
+    line-height: 15px;
+}
+
+.palace-block {
+    padding: 0px;
+    margin: -1px;
+    width: 15px;
+    height: 15px;
+}
+
+.palace-block.disabled {
+    padding: 0px;
+    margin: -1px;
+    width: 15px;
+    height: 15px;
+    background-color: #555;
+}
