@@ -7,12 +7,15 @@
     <div class="row well">
         <div class="col-xs-4" id="login">
             <h3>All Praise {{ user.username }} (<a href="/accounts/logout?next=/">log out</a>)</h3>
+            <p>Your space colony awaits your orders!</p>
+            <p>You'd love to lead them to prosperity, but really the most important thing is to make sure you have the grandest grand spacepalace of all.</p>
+            <p>Get them to build you the most magnificent monument you can before they rise up and get rid of you.</p>
         </div>
         <div class="col-xs-4" id="gameinfo">
             <h3>Breeding cycle {{game.ticks}}, next cycle in <span id="countdown">{{game.time_until_next_tick.total_seconds|floatformat:0}}</span>s</h3>
         </div>
         <div class="col-xs-4" id="palaces">
-            <h2>Grandest Palaces</h2>
+            <h2>Grandest Spacepalaces</h2>
             <table class="table">
                 {% for top_leader in top_leaders %}
                     <tr><td>{{top_leader.name}}</td><td><canvas id="palace-img-{{forloop.counter}}" width="32" height="32"></td></tr>
