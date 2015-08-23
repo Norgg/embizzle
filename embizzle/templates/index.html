@@ -13,6 +13,13 @@
         </div>
         <div class="col-xs-4" id="gameinfo">
             <h3>Breeding cycle {{game.ticks}}, next cycle in <span id="countdown">{{game.time_until_next_tick.total_seconds|floatformat:0}}</span>s</h3>
+            {% if not events %}
+                Nothing happened.
+            {% else %}
+                {% for event in events %}
+                    <div class="alert alert-danger" role="alert">{{ event }}</div>
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="col-xs-4" id="actions">
             <h2>Actions</h2>
@@ -71,9 +78,8 @@
                     HAS BEEN DEPOSED!
                 {% endif %}
             </h2>
-            Personal funds: {{ leader.funds|floatformat:2 }} crods<br/>
-            Palace blocks: {{ leader.palace_blocks }}<br/>
-            <h3>Palace</h3>
+            <h3>Personal funds: {{ leader.funds|floatformat:2 }} crods</h3>
+            <h3>Palace ({{ leader.palace_blocks }} block{{ leader.palace_blocks|pluralize}} left)</h3>
             <div id="palace">
                 {% for row in leader.palace_rows %}
                     {% for blk in row %}

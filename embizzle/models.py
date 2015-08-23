@@ -58,6 +58,9 @@ class Civilisation(Model):
     starved_breeders = IntegerField(default=0)
     starved_others = IntegerField(default=0)
 
+    recent_births = IntegerField(default=0)
+    recent_deaths = IntegerField(default=0)
+
     tax_rate = FloatField(default=0.3)
 
     nutrients = IntegerField(default=1000)  # one consumed per person per tick
@@ -94,13 +97,19 @@ class Civilisation(Model):
 
             # Produce new children based on birth rate
             if self.breeders > 2:
-                self.children += max(1, int(round(self.breeders * self.birth_rate)))
+                self.recent_births = max(1, int(round(self.breeders * self.birth_rate)))
+                self.children += self.recent_births
 
             # Apply death rates
+            self.recent_deaths = 0
             healthcare_reduction = 1.0 - self.healthcare_level / 200.0
-            self.children -= int(round(self.children * self.children_death_rate * healthcare_reduction))
-            self.breeders -= int(round(self.breeders * self.breeder_death_rate * healthcare_reduction))
-            self.others -= int(round(self.others * self.other_death_rate * healthcare_reduction))
+            child_deaths = int(round(self.children * self.children_death_rate * healthcare_reduction))
+            self.children -= child_deaths
+            breeder_deaths = int(round(self.breeders * self.breeder_death_rate * healthcare_reduction))
+            self.breeders -= breeder_deaths
+            other_deaths = int(round(self.others * self.other_death_rate * healthcare_reduction))
+            self.others -= other_deaths
+            self.recent_deaths += child_deaths + breeder_deaths + other_deaths
 
             # Consume food/process starvation
             self.starved_children = self.starved_breeders = self.starved_others = 0
@@ -120,7 +129,7 @@ class Civilisation(Model):
                     self.unrest += self.others * OTHER_STARVATION_UNREST
                     if starvation > self.breeders:
                         self.breeders = 0
-                        self.starved_children = self.breeders
+                        self.starved_breeders = self.breeders
                         starvation -= self.breeders
                         self.unrest += self.breeders * BREEDER_STARVATION_UNREST
                         if starvation > self.children:
@@ -143,6 +152,8 @@ class Civilisation(Model):
                     self.unrest += starvation * OTHER_STARVATION_UNREST
 
                 self.nutrients = 0
+
+            self.recent_deaths += self.starved_children + self.starved_breeders + self.starved_others
 
             if self.nutrients > self.nutrient_storage:
                 self.nutrients = self.nutrient_storage
