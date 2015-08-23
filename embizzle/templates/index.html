@@ -79,12 +79,19 @@
                 {% endif %}
             </h2>
             <h3>Personal funds: {{ leader.funds|floatformat:2 }} crods</h3>
-            <h3>Palace ({{ leader.palace_blocks }} block{{ leader.palace_blocks|pluralize}} left, click to place)</h3>
+            <h3>
+                Palace ({{ leader.palace_blocks }} block{{ leader.palace_blocks|pluralize}} 
+                left{% if leader.palace_blocks > 0 %}, click to place{% endif %})
+            </h3>
             <div id="palace">
                 {% for row in leader.palace_rows %}
                     {% for blk in row %}
                         {% if blk == " " %}
-                            <a href="/build/{{forloop.parentloop.counter}}/{{forloop.counter}}" class="palace-block btn btn-default"></a>
+                            {% if leader.palace_blocks > 0 %}
+                                <a href="/build/{{forloop.parentloop.counter}}/{{forloop.counter}}" class="palace-block btn btn-default"></a>
+                            {% else %}
+                                <a class="palace-block btn btn-default"></a>
+                            {% endif %}
                         {% else %}
                             <a class="palace-block btn btn-default disabled"></a>
                         {% endif %}
@@ -100,10 +107,8 @@
             Tax Rate: {{ civ.tax_rate }}<br/>
             <h3>Population</h3>
             <table class="table">
-                <tr><td>Children</td><td>{{ civ.children }}</td></tr>
-                <tr><td>Breeders</td><td>{{ civ.breeders }}</td></tr>
-                <tr><td>Others</td><td>{{ civ.others }}</td></tr>
-                <tr><td>Total</td><td>{{ civ.population }}</td></tr>
+                <tr><td>Children</td><td>Breeders</td><td>Others</td><td><b>Total</b></td></tr>
+                <tr><td>{{ civ.children }}</td><td>{{ civ.breeders }}</td><td>{{ civ.others }}</td><td>{{ civ.population }}</td></tr>
             </table>
 
             <div class="progress">
