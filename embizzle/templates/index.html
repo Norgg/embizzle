@@ -5,13 +5,13 @@
     <script>$(function(){countdown({{game.time_until_next_tick.total_seconds}}+1)});</script>
 
     <div class="row well">
-        <div class="col-xs-4" id="login">
+        <div class="col-md-4" id="login">
             <h3>All Praise {{ leader.name }} (<a href="/accounts/logout?next=/">log out</a>)</h3>
             <p>Your space colony awaits your orders!</p>
             <p>You'd love to lead them to prosperity, but really the most important thing is to make sure you have the grandest grand spacepalace of all.</p>
             <p>Get them to build you the most magnificent monument you can before they rise up and get rid of you.</p>
         </div>
-        <div class="col-xs-4" id="gameinfo">
+        <div class="col-md-4" id="gameinfo">
             <h3>Breeding cycle {{game.ticks}}, next cycle in <span id="countdown">{{game.time_until_next_tick.total_seconds|floatformat:0}}</span>s</h3>
             {% if not events %}
                 Nothing happened.
@@ -21,7 +21,7 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <div class="col-xs-4" id="actions">
+        <div class="col-md-4" id="actions">
             <h2>Actions</h2>
             <div class="btn-group" role="group">
                 {% if  leader.deposed %}
@@ -51,7 +51,7 @@
     </div>
     
     <div class="row">
-        <div class="col-xs-4" id="palaces">
+        <div class="col-md-4" id="palaces">
             <h2>Grandest Spacepalaces</h2>
             <table class="table">
                 {% for top_leader in top_leaders %}
@@ -71,7 +71,7 @@
             </table>
         </div>
 
-        <div class="col-xs-4" id="leader">
+        <div class="col-md-4" id="leader">
             <h2>
                 {{ leader.name }} the Glorious
                 {% if leader.deposed %}
@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <div class="col-xs-4" id="settlement">
+        <div class="col-md-4" id="settlement">
             <h2>{{ civ.name }}</h2>
             <h3>Public funds: {{ civ.funds|floatformat:2 }} crods</h3>
             Tax Rate: {{ civ.tax_rate }}<br/>
