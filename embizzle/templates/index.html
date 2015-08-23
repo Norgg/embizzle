@@ -33,7 +33,9 @@
                     {% if leader.funds >= 100 %}
                         <a class="action btn btn-warning" href="/action/construct">Expand palace</a>
                     {% endif %}
-                    <a class="action btn btn-danger" href="/action/raise_taxes">Raise taxes</a>
+                    {% if civ.tax_rate < 0.95 %}
+                        <a class="action btn btn-danger" href="/action/raise_taxes">Raise taxes</a>
+                    {% endif %}
                 {% endif %}
             </div><br/><br/>
             {% if  not leader.deposed %}
@@ -73,7 +75,7 @@
 
         <div class="col-md-4" id="leader">
             <h2>
-                {{ leader.name }} the Glorious
+                {{ leader.name }}
                 {% if leader.deposed %}
                     has been deposed!
                 {% endif %}

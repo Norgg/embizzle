@@ -1,3 +1,5 @@
+from random import random
+
 import __init__
 
 import actions
@@ -58,7 +60,9 @@ def register(request):
             game, created = Game.objects.get_or_create(id=1)  # TODO: Handle game creation properly.
             user = User.objects.create(username=form.cleaned_data['leader_name'])
             civ = Civilisation.objects.create(name="The People of {}".format(form.cleaned_data['leader_name']))
-            leader = Leader.objects.create(name=form.cleaned_data['leader_name'], user=user, civ=civ, game=game)
+            new_title = actions.titles[int(random() * len(actions.titles))]
+            leader = Leader.objects.create(name="{} {}".format(form.cleaned_data['leader_name'], new_title),
+                                           user=user, civ=civ, game=game)
             user.set_password(form.cleaned_data['password'])
             user.save()
             user = authenticate(username=form.cleaned_data['leader_name'],
