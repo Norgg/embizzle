@@ -12,12 +12,12 @@
             <h3>Breeding cycle {{game.ticks}}, next cycle in <span id="countdown">{{game.time_until_next_tick.total_seconds|floatformat:0}}</span>s</h3>
         </div>
         <div class="col-xs-4" id="palaces">
-            <h2>Biggest Palaces</h2>
-            <ol>
+            <h2>Grandest Palaces</h2>
+            <table class="table">
                 {% for top_leader in top_leaders %}
-                    <li>{{top_leader.name}}: {{top_leader.palace_size}}</li>
+                    <tr><td>{{top_leader.name}}</td><td>{{top_leader.palace_size}}</td></tr>
                 {% endfor %}
-            </ol>
+            </table>
         </div>
     </div>
     
@@ -27,13 +27,19 @@
             {% if  leader.deposed %}
                 <p><a class="action btn btn-warning" href="/action/reincarnate">Reincarnate</a></p>
             {% else %}
-                <p><a class="action btn btn-success" href="/action/embezzle">Embezzle public funds</a></p>
-                <p><a class="action btn btn-warning" href="/action/construct">Expand palace</a></p>
+                {% if civ.funds >= 10 %}
+                    <p><a class="action btn btn-success" href="/action/embezzle">Embezzle public funds</a></p>
+                {% endif %}
+                {% if leader.funds >= 100 %}
+                    <p><a class="action btn btn-warning" href="/action/construct">Expand palace</a></p>
+                {% endif %}
                 <p><a class="action btn btn-danger" href="/action/raise_taxes">Raise taxes</a></p>
-                <p><a class="action btn btn-default" href="/action/import_nutrients">Import 100 crods of nutrients</a></p>
-                <p><a class="action btn btn-default" href="/action/invest_economy">Invest 100 crods in the economy</a></p>
-                <p><a class="action btn btn-default" href="/action/invest_healthcare">Invest 100 crods in healthcare</a></p>
-                <p><a class="action btn btn-default" href="/action/invest_agriculture">Invest 100 crods in agriculture</a></p>
+                {% if civ.funds >= 100 %}
+                    <p><a class="action btn btn-default" href="/action/import_nutrients">Import 100 crods of nutrients</a></p>
+                    <p><a class="action btn btn-default" href="/action/invest_economy">Invest 100 crods in the economy</a></p>
+                    <p><a class="action btn btn-default" href="/action/invest_healthcare">Invest 100 crods in healthcare</a></p>
+                    <p><a class="action btn btn-default" href="/action/invest_agriculture">Invest 100 crods in agriculture</a></p>
+                {% endif %}
             {% endif %}
         </div>
 

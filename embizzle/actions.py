@@ -5,7 +5,7 @@ from roman import toRoman
 
 def embezzle(user, game, civ, leader):
     if civ.funds >= 10:
-        civ.unrest += (civ.funds / 100) ** 2
+        civ.unrest += max(5, (civ.funds / 100) ** 2)
         leader.funds += civ.funds
         civ.funds = 0
         civ.save()
@@ -55,6 +55,6 @@ def invest_agriculture(user, game, civ, leader):
 
 
 def reincarnate(user, game, civ, leader):
-    new_name = "{} {}".format(user.username + toRoman(user.leaders.count() + 1))
+    new_name = "{} {}".format(user.username, toRoman(user.leaders.count() + 1))
     new_civ = Civilisation.objects.create(name="The People of {}".format(new_name))
     Leader.objects.create(name=new_name, user=user, civ=new_civ, game=game)
