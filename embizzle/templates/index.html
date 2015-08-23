@@ -106,28 +106,31 @@
         <div class="col-md-4" id="settlement">
             <h2>{{ civ.name }}</h2>
             <h3>Public funds: {{ civ.funds|floatformat:2 }} crods</h3>
-            Tax Rate: {{ civ.tax_rate }}<br/>
+            <h4>Tax Rate: {{ civ.tax_rate }}</h4>
+
+            Unrest
+            <div class="progress">
+                <div class="progress-bar progress-bar-danger" role="progressbar" 
+                    aria-valuenow="{{ civ.unrest }}" aria-valuemin="0" aria-valuemax="{{ civ.max_unrest }}" 
+                    style="width: {{ unrest_percent }}%;">
+                    {{ civ.unrest }}
+              </div>
+            </div>
+
+            Nutrients
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" role="progressbar" 
+                    aria-valuenow="{{ civ.nutrients }}" aria-valuemin="0" aria-valuemax="{{ civ.max_nutrients }}" 
+                    style="width: {{ nutrient_percent }}%;">
+                    {{ civ.nutrients }}
+              </div>
+            </div>
+
             <h3>Population</h3>
             <table class="table">
                 <tr><td>Children</td><td>Breeders</td><td>Others</td><td>Total</td><td>Spacegraves</td></tr>
                 <tr><td>{{ civ.children }}</td><td>{{ civ.breeders }}</td><td>{{ civ.others }}</td><td>{{ civ.population }}</td><td>{{ civ.total_deaths }}</td></tr>
             </table>
-
-            <div class="progress">
-                <div class="progress-bar progress-bar-danger" role="progressbar" 
-                    aria-valuenow="{{ civ.unrest }}" aria-valuemin="0" aria-valuemax="{{ civ.max_unrest }}" 
-                    style="width: {{ unrest_percent }}%;">
-                    {{ civ.unrest }} unrest
-              </div>
-            </div>
-
-            <div class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" 
-                    aria-valuenow="{{ civ.nutrients }}" aria-valuemin="0" aria-valuemax="{{ civ.max_nutrients }}" 
-                    style="width: {{ nutrient_percent }}%;">
-                    {{ civ.nutrients }} nutrients
-              </div>
-            </div>
         </div>
     </div>
 {% endblock %}
