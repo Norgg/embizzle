@@ -15,7 +15,7 @@ class Game(Model):
     started_at = DateTimeField(default=timezone.now)
     last_tick = DateTimeField(default=timezone.now)
     ticks = IntegerField(default=0)  # Each tick is one "cycle".
-    tick_length = IntegerField(default=30)  # Length of each tick in seconds.
+    tick_length = IntegerField(default=20)  # Length of each tick in seconds.
 
     def time_until_next_tick(self):
         return (self.last_tick + timedelta(seconds=self.tick_length)) - timezone.now()
@@ -38,7 +38,7 @@ class Game(Model):
 
 class Civilisation(Model):
     name = CharField(max_length=1024, default="Nowhere")
-    funds = FloatField(default=1000.0)
+    funds = FloatField(default=300.0)
 
     unrest = IntegerField(default=0)  # How unhappy the population are with their leader
     max_unrest = IntegerField(default=200)  # How unhappy the population can get before deposing the leader

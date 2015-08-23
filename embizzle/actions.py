@@ -5,7 +5,7 @@ from roman import toRoman
 
 def embezzle(user, game, civ, leader):
     if civ.funds >= 10:
-        civ.unrest += max(5, (civ.funds / 100) ** 2)
+        civ.unrest += max(5, (civ.funds / 100) ** 1.5)
         leader.funds += civ.funds
         civ.funds = 0
         civ.save()
@@ -34,24 +34,24 @@ def import_nutrients(user, game, civ, leader):
 
 
 def invest_economy(user, game, civ, leader):
-    if civ.funds >= 100:
+    while civ.funds >= 100:
         civ.economy_level += 1
         civ.funds -= 100
-        civ.save()
+    civ.save()
 
 
 def invest_healthcare(user, game, civ, leader):
-    if civ.funds >= 100:
+    while civ.funds >= 100:
         civ.healthcare_level += 1
         civ.funds -= 100
-        civ.save()
+    civ.save()
 
 
 def invest_agriculture(user, game, civ, leader):
-    if civ.funds >= 100:
+    while civ.funds >= 100:
         civ.agriculture_level += 1
         civ.funds -= 100
-        civ.save()
+    civ.save()
 
 
 def reincarnate(user, game, civ, leader):
