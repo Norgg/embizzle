@@ -46,11 +46,11 @@ class Civilisation(Model):
     children = IntegerField(default=0)  # Number of children in the population
     breeders = IntegerField(default=100)  # People of breeding age / ability/ will
     others = IntegerField(default=20)  # Others
-    birth_rate = FloatField(default=0.07)  # birth rate per breeder
+    birth_rate = FloatField(default=0.2)  # birth rate per breeder
 
     # Death rates
-    children_death_rate = FloatField(default=0.002)  # death rate per child
-    breeder_death_rate = FloatField(default=0.005)  # death rate per breeder
+    children_death_rate = FloatField(default=0.03)  # death rate per child
+    breeder_death_rate = FloatField(default=0.06)  # death rate per breeder
     other_death_rate = FloatField(default=0.1)  # death rate per other
 
     # Starvation tracking
