@@ -75,6 +75,7 @@ class Civilisation(Model):
     def process_ticks(self, ticks):
         for i in range(ticks):
             if self.unrest >= self.max_unrest:
+                self.unrest = self.max_unrest
                 continue
 
             self.unrest += 1
@@ -171,7 +172,9 @@ class Leader(Model):
 
     def process_ticks(self, ticks):
         if self.civ.unrest >= self.civ.max_unrest:
+            self.civ.unrest = self.civ.max_unrest
             self.deposed = True
+            self.civ.save()
             self.save()
         self.civ.process_ticks(ticks)
 
