@@ -17,7 +17,7 @@ from models import Civilisation, Game, Leader
 @transaction.atomic
 def index(request):
     user = request.user
-    leader = user.leaders.all()[0]
+    leader = Leader.objects.filter(user=user).select_related('civ')[0]
     civ = leader.civ
     game = leader.game
     game.check_tick()

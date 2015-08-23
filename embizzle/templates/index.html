@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block "content" %}
+    <script src="static/index.js"></script>
+    <script>$(function(){countdown({{game.time_until_next_tick.total_seconds}})});</script>
 
     <div class="row well">
         <div class="col-xs-4" id="login">
             <h3>All Praise {{ user.username }} ( <a href="/accounts/logout?next=/">log out</a> )</h3>
         </div>
         <div class="col-xs-4" id="gameinfo">
-            <h3>Breeding cycle {{game.ticks}}, next cycle in {{game.time_until_next_tick.total_seconds|floatformat:0}}s</h3>
+            <h3>Breeding cycle {{game.ticks}}, next cycle in <span id="countdown">{{game.time_until_next_tick.total_seconds|floatformat:0}}</span>s</h3>
         </div>
         <div class="col-xs-4" id="palaces">
             <h2>Biggest Palaces</h2>
@@ -21,11 +23,13 @@
     
     <div class="row">
         <div class="col-xs-4" id="actions">
-            {% if civ.unrest < civ.max_unrest %}
-                <h2>Actions</h2>
+            <h2>Actions</h2>
+            {% if  leader.deposed %}
+                <p><a class="action btn btn-warning" href="/action/reincarnate">Reincarnate</a></p>
+            {% else %}
                 <p><a class="action btn btn-warning" href="/action/construct">Expand palace</a></p>
                 <p><a class="action btn btn-danger" href="/action/raise_taxes">Raise taxes</a></p>
-                <p><a class="action btn btn-success" href="/action/embezzle">Embezzle 100 crods</a></p>
+                <p><a class="action btn btn-success" href="/action/embezzle">Embezzle public funds</a></p>
                 <p><a class="action btn btn-default" href="/action/import_nutrients">Import 100 crods of nutrients</a></p>
                 <p><a class="action btn btn-default" href="/action/invest_economy">Invest 100 crods in the economy</a></p>
                 <p><a class="action btn btn-default" href="/action/invest_healthcare">Invest 100 crods in healthcare</a></p>
@@ -37,7 +41,7 @@
         <div class="col-xs-4" id="leader">
             <h2>
                 {{ leader.name }} the Glorious
-                {% if civ.unrest >= civ.max_unrest %}
+                {% if leader.deposed %}
                     HAS BEEN DEPOSED!
                 {% endif %}
             </h2>
@@ -58,7 +62,7 @@
 
             <h3>Unrest</h3>
             <div class="progress">
-                <div class="progress-bar" role="progressbar" 
+                <div class="progress-bar progress-bar-danger" role="progressbar" 
                     aria-valuenow="{{ civ.unrest }}" aria-valuemin="0" aria-valuemax="{{ civ.max_unrest }}" 
                     style="width: {{ unrest_percent }}%;">
                     {{ civ.unrest }} unrest

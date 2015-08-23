@@ -1,7 +1,8 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import User
-from django.db.models import CharField, DateTimeField, FloatField, ForeignKey, IntegerField, Model, OneToOneField
+from django.db.models import (BooleanField, CharField, DateTimeField, FloatField,
+                              ForeignKey, IntegerField, Model, OneToOneField)
 from django.utils import timezone
 
 OTHER_STARVATION_UNREST = 10
@@ -30,7 +31,7 @@ class Game(Model):
 
     def process_ticks(self, ticks):
         self.save()
-        for leader in self.leaders.all():
+        for leader in self.leaders.filter(deposed=False):
             leader.process_ticks(ticks)
 
 
@@ -56,7 +57,7 @@ class Civilisation(Model):
     starved_breeders = IntegerField(default=0)
     starved_others = IntegerField(default=0)
 
-    tax_rate = FloatField(default=0.1)
+    tax_rate = FloatField(default=0.2)
 
     nutrients = IntegerField(default=1000)  # one consumed per person per tick
     nutrient_production = IntegerField(default=2)  # nutrients produced per breeder and pre 2 others.
@@ -72,6 +73,9 @@ class Civilisation(Model):
 
     def process_ticks(self, ticks):
         for i in range(ticks):
+            if self.unrest >= self.max_unrest:
+                continue
+
             self.unrest += 1
 
             # Each cycle 1/20th of "children" become "breeders"
@@ -156,7 +160,15 @@ class Leader(Model):
     user = ForeignKey(User, related_name="leaders")
     civ = OneToOneField(Civilisation, related_name="leader")
     funds = FloatField(default=100.0)
+    deposed = BooleanField(default=False)
     palace_size = IntegerField(default=1)  # How big this leader's "palace" is.
+    created = DateTimeField(default=timezone.now)
 
     def process_ticks(self, ticks):
+        if self.civ.unrest >= self.civ.max_unrest:
+            self.deposed = True
+            self.save()
         self.civ.process_ticks(ticks)
+
+    class Meta:
+        ordering = ['-created']
