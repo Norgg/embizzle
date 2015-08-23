@@ -23,6 +23,7 @@ def index(request):
     game.check_tick()
     top_leaders = Leader.objects.order_by('-palace_size')[0:10]
     unrest_percent = int(civ.unrest * 100 / civ.max_unrest)
+    nutrient_percent = int(civ.nutrients * 100 / civ.nutrient_storage)
     return render(request, "index.html", locals())
 
 

@@ -47,13 +47,6 @@ def invest_healthcare(user, game, civ, leader):
         civ.save()
 
 
-def invest_education(user, game, civ, leader):
-    if civ.funds >= 100:
-        civ.education_level += 1
-        civ.funds -= 100
-        civ.save()
-
-
 def invest_agriculture(user, game, civ, leader):
     if civ.funds >= 100:
         civ.agriculture_level += 1

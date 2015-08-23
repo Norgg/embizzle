@@ -8,13 +8,14 @@ from django.utils import timezone
 OTHER_STARVATION_UNREST = 10
 BREEDER_STARVATION_UNREST = 50
 CHILD_STARVATION_UNREST = 100
+BASE_EARNINGS = 3.0
 
 
 class Game(Model):
     started_at = DateTimeField(default=timezone.now)
     last_tick = DateTimeField(default=timezone.now)
     ticks = IntegerField(default=0)  # Each tick is one "cycle".
-    tick_length = IntegerField(default=60)  # Length of each tick in seconds.
+    tick_length = IntegerField(default=30)  # Length of each tick in seconds.
 
     def time_until_next_tick(self):
         return (self.last_tick + timedelta(seconds=self.tick_length)) - timezone.now()
@@ -57,15 +58,15 @@ class Civilisation(Model):
     starved_breeders = IntegerField(default=0)
     starved_others = IntegerField(default=0)
 
-    tax_rate = FloatField(default=0.2)
+    tax_rate = FloatField(default=0.3)
 
     nutrients = IntegerField(default=1000)  # one consumed per person per tick
-    nutrient_production = IntegerField(default=2)  # nutrients produced per breeder and pre 2 others.
+    nutrient_production = IntegerField(default=10)  # nutrients produced per (15+agriculture level)
+    nutrient_storage = IntegerField(default=2000)
 
     # Upgrade levels
     economy_level = IntegerField(default=0)
     healthcare_level = IntegerField(default=0)
-    education_level = IntegerField(default=0)
     agriculture_level = IntegerField(default=0)
 
     def population(self):
@@ -80,8 +81,7 @@ class Civilisation(Model):
 
             # Each cycle 1/20th of "children" become "breeders"
             if self.children > 0:
-                education_mult = 1.0 + self.education_level / 200.0
-                new_breeders = max(1, int(round(self.children / 20.0) * education_mult))
+                new_breeders = max(1, int(round(self.children / 20.0)))
                 self.breeders += new_breeders
                 self.children -= new_breeders
 
@@ -104,8 +104,8 @@ class Civilisation(Model):
             # Consume food/process starvation
             self.starved_children = self.starved_breeders = self.starved_others = 0
 
-            agriculture_mult = 1.0 + self.agriculture_level / 200.0
-            self.nutrients += self.nutrient_production * (self.breeders + self.others / 2) * agriculture_mult
+            agriculture_mult = 15.0 + self.agriculture_level
+            self.nutrients += self.nutrient_production * agriculture_mult
 
             if self.nutrients >= self.population():
                 self.nutrients -= self.population()
@@ -143,9 +143,12 @@ class Civilisation(Model):
 
                 self.nutrients = 0
 
+            if self.nutrients > self.nutrient_storage:
+                self.nutrients = self.nutrient_storage
+
             # Process funds
             economy_mult = 1.0 + self.economy_level / 1000.0
-            self.funds += (self.breeders * self.tax_rate + self.others / 2 * self.tax_rate) * economy_mult
+            self.funds += BASE_EARNINGS * (self.breeders + self.others / 2) * economy_mult * self.tax_rate
 
             if self.unrest > self.max_unrest:
                 self.unrest = self.max_unrest

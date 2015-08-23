@@ -27,13 +27,12 @@
             {% if  leader.deposed %}
                 <p><a class="action btn btn-warning" href="/action/reincarnate">Reincarnate</a></p>
             {% else %}
+                <p><a class="action btn btn-success" href="/action/embezzle">Embezzle public funds</a></p>
                 <p><a class="action btn btn-warning" href="/action/construct">Expand palace</a></p>
                 <p><a class="action btn btn-danger" href="/action/raise_taxes">Raise taxes</a></p>
-                <p><a class="action btn btn-success" href="/action/embezzle">Embezzle public funds</a></p>
                 <p><a class="action btn btn-default" href="/action/import_nutrients">Import 100 crods of nutrients</a></p>
                 <p><a class="action btn btn-default" href="/action/invest_economy">Invest 100 crods in the economy</a></p>
                 <p><a class="action btn btn-default" href="/action/invest_healthcare">Invest 100 crods in healthcare</a></p>
-                <p><a class="action btn btn-default" href="/action/invest_education">Invest 100 crods in education</a></p>
                 <p><a class="action btn btn-default" href="/action/invest_agriculture">Invest 100 crods in agriculture</a></p>
             {% endif %}
         </div>
@@ -52,6 +51,7 @@
         <div class="col-xs-4" id="settlement">
             <h2>{{ civ.name }}</h2>
             <h3>Public funds: {{ civ.funds|floatformat:2 }} crods</h3>
+            Tax Rate: {{ civ.tax_rate }}<br/>
             <h3>Population</h3>
             <table class="table">
                 <tr><td>Children</td><td>{{ civ.children }}</td></tr>
@@ -60,7 +60,6 @@
                 <tr><td>Total</td><td>{{ civ.population }}</td></tr>
             </table>
 
-            <h3>Unrest</h3>
             <div class="progress">
                 <div class="progress-bar progress-bar-danger" role="progressbar" 
                     aria-valuenow="{{ civ.unrest }}" aria-valuemin="0" aria-valuemax="{{ civ.max_unrest }}" 
@@ -69,9 +68,13 @@
               </div>
             </div>
 
-            <h3>Resources</h3>
-            {{ civ.nutrients }} nutrients remaining<br/>
-            Tax Rate: {{ civ.tax_rate }}<br/>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" role="progressbar" 
+                    aria-valuenow="{{ civ.nutrients }}" aria-valuemin="0" aria-valuemax="{{ civ.max_nutrients }}" 
+                    style="width: {{ nutrient_percent }}%;">
+                    {{ civ.nutrients }} nutrients
+              </div>
+            </div>
         </div>
     </div>
 {% endblock %}
