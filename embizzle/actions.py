@@ -20,10 +20,10 @@ def raise_taxes(user, game, civ, leader):
 
 
 def construct(user, game, civ, leader):
-    if leader.funds >= 100:
+    while leader.funds >= 100:
         leader.funds -= 100
         leader.palace_blocks += 1
-        leader.save()
+    leader.save()
 
 
 def import_nutrients(user, game, civ, leader):
