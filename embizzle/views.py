@@ -25,7 +25,6 @@ def index(request):
     top_leaders = Leader.objects.order_by('-palace_size')[0:10]
     unrest_percent = int(civ.unrest * 100 / civ.max_unrest)
     nutrient_percent = int(civ.nutrients * 100 / civ.nutrient_storage)
-    palace_rows = [leader.palace[i:i+16] for i in range(0, len(leader.palace), 16)]
     return render(request, "index.html", locals())
 
 

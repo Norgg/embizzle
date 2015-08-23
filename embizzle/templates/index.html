@@ -15,7 +15,18 @@
             <h2>Grandest Palaces</h2>
             <table class="table">
                 {% for top_leader in top_leaders %}
-                    <tr><td>{{top_leader.name}}</td><td>{{top_leader.palace_size}}</td></tr>
+                    <tr><td>{{top_leader.name}}</td><td><canvas id="palace-img-{{forloop.counter}}" width="32" height="32"></td></tr>
+                    <script>
+                        var ctx = $('#palace-img-{{forloop.counter}}')[0].getContext("2d");
+                        ctx.fillStyle = "black";
+                         {% for row in top_leader.palace_rows %}
+                            {% for blk in row %}
+                                {% if blk != " " %}
+                                    ctx.fillRect({{forloop.counter}} * 2, {{forloop.parentloop.counter}} * 2, 2, 2);
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                   </script>
                 {% endfor %}
             </table>
         </div>
@@ -54,8 +65,7 @@
             Palace blocks: {{ leader.palace_blocks }}<br/>
             <h3>Palace</h3>
             <div id="palace">
-                {% for row in palace_rows %}
-                    
+                {% for row in leader.palace_rows %}
                     {% for blk in row %}
                         {% if blk == " " %}
                             <a href="/build/{{forloop.parentloop.counter}}/{{forloop.counter}}" class="palace-block btn btn-default"></a>

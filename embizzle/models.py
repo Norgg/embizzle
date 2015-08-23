@@ -175,5 +175,8 @@ class Leader(Model):
             self.save()
         self.civ.process_ticks(ticks)
 
+    def palace_rows(self):
+        return [self.palace[i:i+16] for i in range(0, len(self.palace), 16)]
+
     class Meta:
         ordering = ['-created']
