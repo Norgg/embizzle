@@ -22,7 +22,7 @@
                          {% for row in top_leader.palace_rows %}
                             {% for blk in row %}
                                 {% if blk != " " %}
-                                    ctx.fillRect({{forloop.counter}} * 2, {{forloop.parentloop.counter}} * 2, 2, 2);
+                                    ctx.fillRect(({{forloop.counter}} - 1) * 2, ({{forloop.parentloop.counter}} - 1) * 2, 2, 2);
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}
